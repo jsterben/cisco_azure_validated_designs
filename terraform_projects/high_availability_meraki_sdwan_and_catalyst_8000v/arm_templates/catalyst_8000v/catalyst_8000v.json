@@ -1,0 +1,842 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment location"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "C8000V_Network",
+            "metadata": {
+                "description": "VNet name"
+            }
+        },
+        "virtualNetworkExistingRGName": {
+            "type": "string",
+            "defaultValue": "defaultvnetrg",
+            "metadata": {
+                "description": "Identifies whether to use new or existing Storage Account"
+            }
+        },
+        "virtualNetworkAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual Network Address prefix"
+            }
+        },
+        "vnetNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "metadata": {
+                "description": "Identifies whether to use new or existing Virtual Network"
+            }
+        },
+        "Subnet1Name": {
+            "type": "string",
+            "defaultValue": "subnet1",
+            "metadata": {
+                "description": "Subnet 1 Name"
+            }
+        },
+        "Subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+                "description": "Subnet 1 Prefix"
+            }
+        },
+        "Subnet2Name": {
+            "type": "string",
+            "defaultValue": "subnet2",
+            "metadata": {
+                "description": "Subnet 1 Name"
+            }
+        },
+        "Subnet2Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.2.0/24",
+            "metadata": {
+                "description": "Subnet 2 Prefix"
+            }
+        },
+        "Subnet3Name": {
+            "type": "string",
+            "defaultValue": "subnet3",
+            "metadata": {
+                "description": "Subnet 3 Name"
+            }
+        },
+        "Subnet3Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.3.0/24",
+            "metadata": {
+                "description": "Subnet 3 Prefix (example 10.0.2.0/24)"
+            }
+        },
+        "Subnet4Name": {
+            "type": "string",
+            "defaultValue": "subnet4",
+            "metadata": {
+                "description": "Subnet 4 Name"
+            }
+        },
+        "Subnet4Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.4.0/24",
+            "metadata": {
+                "description": "Subnet 4 Prefix (example 10.0.3.0/24)"
+            }
+        },
+        "Subnet5Name": {
+            "type": "string",
+            "defaultValue": "subnet5",
+            "metadata": {
+                "description": "Subnet 5 Name"
+            }
+        },
+        "Subnet5Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.5.0/24",
+            "metadata": {
+                "description": "Subnet 5 Prefix (example 10.0.4.0/24)"
+            }
+        },
+        "Subnet6Name": {
+            "type": "string",
+            "defaultValue": "subnet6",
+            "metadata": {
+                "description": "Subnet 6 Name"
+            }
+        },
+        "Subnet6Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.6.0/24",
+            "metadata": {
+                "description": "Subnet 6 Prefix (example 10.0.5.0/24)"
+            }
+        },
+        "Subnet7Name": {
+            "type": "string",
+            "defaultValue": "subnet7",
+            "metadata": {
+                "description": "Subnet 7 Name"
+            }
+        },
+        "Subnet7Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.7.0/24",
+            "metadata": {
+                "description": "Subnet 7 Prefix (example 10.0.6.0/24)"
+            }
+        },
+        "Subnet8Name": {
+            "type": "string",
+            "defaultValue": "subnet0",
+            "metadata": {
+                "description": "Subnet 0 Name"
+            }
+        },
+        "Subnet8Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.8.0/24",
+            "metadata": {
+                "description": "Subnet 8 Prefix (example 10.0.7.0/24)"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Username for the Virtual Machine."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Password for the Virtual Machine."
+            }
+        },
+        "sshPublicKey": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "SSH Key for the VM."
+            }
+        },
+        "authenticationType": {
+            "type": "string",
+            "defaultValue": "sshPublicKey",
+            "allowedValues": [
+                "password",
+                "sshPublicKey"
+            ],
+            "metadata": {
+                "description": "Authentication Type to chose for ssh into the VM."
+            }
+        },
+        "vmName": {
+            "type": "string",
+            "defaultValue": "CSR",
+            "metadata": {
+                "description": "Name for the Virtual Machine."
+            }
+        },
+        "enableCustomData": {
+            "type": "String",
+            "defaultValue": "No",
+            "metadata": {
+                "description": "Enable this feature to provide custom data."
+            }
+        },
+        "customData": {
+            "type": "String",
+            "defaultValue": "echo customData",
+            "metadata": {
+                "description": "String passed down to the Virtual Machine."
+            }
+        },
+        "enableAN": {
+            "type": "string",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Enable this feature to provide custom data."
+            }
+        },
+        "managedDisk": {
+            "type": "string",
+            "defaultValue": "Enabled",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "metadata": {
+                "description": "Managed Disk"
+            }
+        },
+        "availabilitySet": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Availability Set"
+            }
+        },
+        "availabilitySetName": {
+            "type": "string",
+            "defaultValue": "defaultAvName",
+            "metadata": {
+                "description": "Availability Set Name"
+            }
+        },
+        "availabilitySetFaultDomainCount": {
+            "type": "string",
+            "defaultValue": "2",
+            "metadata": {
+                "description": "Availability Set Fault domain count"
+            }
+        },
+        "availabilitySetUpdateDomainCount": {
+            "type": "string",
+            "defaultValue": "20",
+            "metadata": {
+                "description": "Availability Set Update domain count"
+            }
+        },
+        "newStorageAccountName": {
+            "type": "string",
+            "defaultValue": "defaultstrg",
+            "metadata": {
+                "description": "Unique Name for Storage Account where the Virtual Machine's disks will be placed."
+            }
+        },
+        "storageAccountType": {
+            "type": "string",
+            "defaultValue": "Premium_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS",
+                "Standard_GRS",
+                "Premium_GRS"
+            ],
+            "metadata": {
+                "description": "The type of storage account created."
+            }
+        },
+        "storageAccountNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Identifies whether to use new or existing Storage Account"
+            }
+        },
+        "storageAccountExistingRG": {
+            "type": "string",
+            "defaultValue": "defaultstrg",
+            "metadata": {
+                "description": "Resource Group containing existing storage account"
+            }
+        },
+        "bootDiagnostics": {
+            "type": "string",
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "metadata": {
+                "description": "Capture boot logs and screenshots of VM to help diagnose bootup issues"
+            }
+        },
+        "diagnosticsStorageAccountName": {
+            "type": "string",
+            "defaultValue": "defaultdiagsname",
+            "metadata": {
+                "description": "Unique Name for Storage Account where the Virtual Machine's disks will be placed."
+            }
+        },
+        "diagnosticsStorageAccountType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS"
+            ],
+            "metadata": {
+                "description": "The type of storage account created."
+            }
+        },
+        "diagnosticsStorageAccountNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Identifies whether to use new or existing Storage Account"
+            }
+        },
+        "diagnosticsStorageAccountExistingRG": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Resource Group containing existing storage account"
+            }
+        },
+        "publicIPAddressName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Name of the Public IP Address"
+            }
+        },
+        "publicIPDnsName": {
+            "type": "string",
+            "defaultValue": "csrdns",
+            "metadata": {
+                "description": "Unique DNS Prefix for the Public IP used to access the Virtual Machine."
+            }
+        },
+        "publicIPNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Indicates whether the Public IP is new or existing"
+            }
+        },
+        "publicIPExistingRGName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Resource Group containing existing public IP"
+            }
+        },
+        "numberOfNics": {
+            "type": "string",
+            "metadata": {
+                "description": "Number of Network Interfaces for the CSR"
+            }
+        },
+        "vmSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_D4_v2",
+                "Standard_DS4_v2",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_F16s_v2",
+                "Standard_F32s_v2"
+            ],
+            "metadata": {
+                "description": "Size of the Virtual Machine."
+            }
+        },
+        "ImageVersion": {
+            "type": "string",
+            "allowedValues": [
+                "17_4_1a",
+                "17_04_02",
+                "17_05_01a",
+                "17_06_01a"
+            ],
+            "metadata": {
+                "description": "Cisco C8000V IOS XE image version"
+            }
+        },
+        "publicIpAllocationMethod": {
+            "type": "string",
+            "defaultValue": "Dynamic",
+            "allowedValues": [
+                "Dynamic",
+                "Static"
+            ],
+            "metadata": {
+                "description": "Allocation method for the public ip address"
+            }
+        },
+        "publicIpSku": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "Standard"
+            ],
+            "metadata": {
+                "description": "Name of the resource group for the public ip address"
+            }
+        },
+        "LicenseType": {
+            "type": "string",
+            "defaultValue": "byol",
+            "allowedValues": [
+                "byol",
+                "payg"
+            ],
+            "metadata": {
+                "description": "License Type"
+            }
+        },
+        "TechPackage": {
+            "type": "string",
+            "defaultValue": "essentials",
+            "allowedValues": [
+                "essentials",
+                "advantage"
+            ],
+            "metadata": {
+                "description": "Technology package"
+            }
+        }
+    },
+    "variables": {
+        "imageOffer": "cisco-c8000v",
+        "skuSuffix": "[if ( equals(parameters('LicenseType'), 'payg') , concat('-', parameters('LicenseType'), '-', parameters('TechPackage')), concat('-', parameters('LicenseType')))]",
+        "sku": "[concat(parameters('ImageVersion') , variables('skuSuffix'))]",
+        "OSDiskName": "[concat(parameters('vmName'),'-disk')]",
+        "nsgname": "[concat(parameters('vmName'),'-SSH-SecurityGroup')]",
+        "existingVnet": "[concat(parameters('vmName'),'-Nic0-existingVnet')]",
+        "newVnet": "[concat(parameters('vmName'),'-Nic0-newVnet')]",
+        "publicIpSku": "[parameters('publicIpSku')]",
+        "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
+        "vnetRG": "[if(equals(parameters('vnetNewOrExisting'), 'new'),  resourceGroup().name, parameters('virtualNetworkExistingRGName') )]",
+        "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/',variables('nsgname'))]",
+        "enableAN": "[parameters('enableAN')]",
+        "publicIpRgName": "[if( equals(parameters('publicIPNewOrExisting'), 'new'), resourceGroup().name , parameters('publicIPExistingRGName') )]",
+        "publicIpAddressId": {
+            "id": "[resourceId(variables('publicIpRgName'), 'Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]"
+        },
+        "customData": "[base64(parameters('customData'))]",
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": "true",
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[variables('sshKeyPath')]",
+                        "keyData": "[parameters('sshPublicKey')]"
+                    }
+                ]
+            }
+        },
+        "managedDisk": {
+            "storageAccountType": "[parameters('storageAccountType')]"
+        },
+        "storageRgName": "[if( equals(parameters('storageAccountNewOrExisting'), 'new'), resourceGroup().name , parameters('storageAccountExistingRG') )]",
+        "diagStorageRgName": "[if( equals(parameters('diagnosticsStorageAccountNewOrExisting'), 'new'), resourceGroup().name , parameters('diagnosticsStorageAccountExistingRG') )]",
+        "imagePublisher": "cisco",
+        "availabilitySetID": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets',parameters('availabilitySetName'))]"
+        }
+    },
+    "resources": [
+        {
+            "name": "pid-ccf9ab3d-21ab-47ce-8f76-18c485482829-partnercenter",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            }
+        },
+        {
+            "condition": "[and( equals(parameters('storageAccountNewOrExisting'), 'new') , equals(parameters('managedDisk'),'Disabled') )]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-01-01",
+            "name": "[parameters('newStorageAccountName')]",
+            "location": "[parameters('location')]",
+            "kind": "Storage",
+            "sku": {
+                "name": "[parameters('storageAccountType')]"
+            }
+        },
+        {
+            "condition": "[and(equals(parameters('diagnosticsStorageAccountNewOrExisting'), 'new'), equals(parameters('bootDiagnostics'),'true'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-01-01",
+            "name": "[parameters('diagnosticsStorageAccountName')]",
+            "location": "[parameters('location')]",
+            "kind": "Storage",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+        {
+            "condition": "[equals(parameters('publicIPNewOrExisting'), 'new')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('publicIPAddressName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[variables('publicIpSku')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "[parameters('publicIpAllocationMethod')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('publicIPDnsName')]"
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('availabilitySet'), 'Yes')]",
+            "name": "[parameters('availabilitySetName')]",
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "platformFaultDomainCount": "[parameters('availabilitySetFaultDomainCount')]",
+                "platformUpdateDomainCount": "[parameters('availabilitySetUpdateDomainCount')]"
+            },
+            "sku": {
+                "name": "[if( equals(parameters('managedDisk'), 'Enabled'), 'Aligned', 'Classic' )]"
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vmName')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "systemAssigned"
+            },
+            "plan": {
+                "name": "[variables('sku')]",
+                "publisher": "[variables('imagePublisher')]",
+                "product": "[variables('imageOffer')]"
+            },
+            "dependsOn": [
+                "[parameters('newStorageAccountName')]",
+                "[parameters('diagnosticsStorageAccountName')]",
+                "[parameters('availabilitySetName')]",
+                "[variables('existingVnet')]",
+                "[variables('newVnet')]",
+                "nicsLoop"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[if(equals(parameters('authenticationType'), 'password'), parameters('adminPassword'), json('null'))]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]",
+                    "customData": "[if(equals(parameters('enableCustomData'),'No'), json('null'), variables('customData'))]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('sku')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "[variables('OSDiskName')]",
+                        "managedDisk": "[if( equals(parameters('managedDisk'), 'Enabled'), variables('managedDisk'), json('null'))]",
+                        "vhd": "[if(equals(parameters('managedDisk'), 'Disabled'), json(concat('{\"uri\":\"', concat(reference(resourceId(variables('storageRgName'), 'Microsoft.Storage/storageAccounts', parameters('newStorageAccountName')), '2018-07-01').primaryEndpoints.blob, 'vhds/', variables('OSDiskName'), '.vhd'), '\"}')), json('null'))]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "copy": [
+                        {
+                            "name": "networkInterfaces",
+                            "count": "[int(parameters('numberOfNics'))]",
+                            "input": {
+                                "properties": {
+                                    "primary": "[if(equals(copyIndex('networkInterfaces'),0),'true', 'false')]"
+                                },
+                                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'), '-Nic', copyIndex('networkInterfaces') , '-', parameters('vnetNewOrExisting'), 'Vnet'))]"
+                            }
+                        }
+                    ]
+                },
+                "availabilitySet": "[if(equals(parameters('availabilitySet'),'Yes'), variables('availabilitySetID'), json('null'))]",
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "[parameters('bootDiagnostics')]",
+                        "storageUri": "[if(equals(parameters('bootDiagnostics'),'true'), reference(resourceId(variables('diagStorageRgName'), 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2018-07-01').primaryEndpoints.blob, json('null'))]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[concat(parameters('vmName'),'-SSH-SecurityGroup')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "SSH-Rule",
+                        "properties": {
+                            "description": "Allow SSH",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "UDP-Rule1",
+                        "properties": {
+                            "description": "Allow UDP",
+                            "protocol": "UDP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "500",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "UDP-Rule2",
+                        "properties": {
+                            "description": "Allow UDP",
+                            "protocol": "UDP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "4500",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "name": "[concat('Subnet',add(copyIndex(),1),'-CSR-RouteTable')]",
+            "copy": {
+                "name": "routeTable",
+                "count": "[int(parameters('numberOfNics'))]"
+            },
+            "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]"
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "condition": "[equals(parameters('vnetNewOrExisting'), 'new')]",
+            "dependsOn": [
+                "routeTable"
+            ],
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('virtualNetworkAddressPrefix')]"
+                    ]
+                },
+                "copy": [
+                    {
+                        "name": "subnets",
+                        "count": "[int(parameters('numberOfNics'))]",
+                        "input": {
+                            "name": "[parameters(concat('Subnet', add(copyIndex('subnets'),1),'Name'))]",
+                            "properties": {
+                                "addressPrefix": "[parameters(concat('Subnet',add(copyIndex('subnets'),1),'Prefix'))]",
+                                "routeTable": {
+                                    "id": "[resourceId('Microsoft.Network/routeTables',concat('Subnet',add(copyIndex('subnets'),1),'-CSR-RouteTable'))]"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(parameters('vmName'),'-Nic0-newVnet')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups/',variables('nsgname'))]"
+            ],
+            "condition": "[equals(parameters('vnetNewOrExisting'), 'new')]",
+            "properties": {
+                "enableAcceleratedNetworking": "[bool(variables('enableAN'))]",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId(variables('vnetRG'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('Subnet1Name'))]"
+                            },
+                            "publicIPAddress": "[ variables('publicIpAddressId') ]"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                },
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups/',variables('nsgname'))]"
+            ],
+            "name": "[concat(parameters('vmName'), '-Nic', copyIndex(1), '-newVnet')]",
+            "location": "[parameters('location')]",
+            "condition": "[equals(parameters('vnetNewOrExisting'), 'new')]",
+            "copy": {
+                "name": "nicsLoop",
+                "count": "[sub(int(parameters('numberOfNics')),1)]"
+            },
+            "properties": {
+                "enableAcceleratedNetworking": "[bool(variables('enableAN'))]",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId(variables('vnetRG'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters(concat('Subnet', add(copyIndex(1),1),'Name')))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                },
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(parameters('vmName'),'-Nic0-existingVnet')]",
+            "location": "[parameters('location')]",
+            "condition": "[equals(parameters('vnetNewOrExisting'), 'existing')]",
+            "dependsOn": [
+                "[variables('nsgID')]"
+            ],
+            "properties": {
+                "enableAcceleratedNetworking": "[bool(variables('enableAN'))]",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId(variables('vnetRG'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'),  parameters('Subnet1Name'))]"
+                            },
+                            "publicIPAddress": "[ variables('publicIpAddressId') ]"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                },
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "dependsOn": [
+                "[variables('nsgID')]"
+            ],
+            "name": "[concat(parameters('vmName'), '-Nic', copyIndex(1), '-existingVnet')]",
+            "location": "[parameters('location')]",
+            "condition": "[equals(parameters('vnetNewOrExisting'), 'existing')]",
+            "copy": {
+                "name": "nicsLoop",
+                "count": "[sub(int(parameters('numberOfNics')),1)]"
+            },
+            "properties": {
+                "enableAcceleratedNetworking": "[bool(variables('enableAN'))]",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId(variables('vnetRG'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters(concat('Subnet', add(copyIndex(1),1),'Name')))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                },
+                "enableIPForwarding": true
+            }
+        }
+    ]
+}

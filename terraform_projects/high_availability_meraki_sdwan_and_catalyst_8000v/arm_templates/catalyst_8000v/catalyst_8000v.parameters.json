@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ImageVersion": {
+            "value": "17_06_01a"
+        },
+        "numberOfNics": {
+            "value": 2
+        },
+        "LicenseType": {
+            "value": "byol"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "adminUsername": {
+            "value": "pibe_azul"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "bootDiagnostics": {
+            "value": "false"
+        },
+        "availabilitySet": {
+            "value": "No"
+        },
+        "location": {
+            "value": "centralus"
+        },
+        "managedDisk": {
+            "value": "Enabled"
+        },
+        "enableCustomData": {
+            "value": "No"
+        },
+        "enableAN": {
+            "value": true
+        },
+        "publicIPAddressName": {
+            "value": "PublicIP0"
+        },
+        "publicIPDnsName": {
+            "value": "catalyst8000v0publicip"
+        },
+        "publicIPExistingRGName": {
+            "value": "MainResourceGroup"
+        },
+        "publicIPNewOrExisting": {
+            "value": "existing"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Static"
+        },
+        "publicIpSku": {
+            "value": "Standard"
+        },
+        "Subnet1Name": {
+            "value": "Subnet0"
+        },
+        "Subnet1Prefix": {
+            "value": "10.3.0.0/24"
+        },
+        "Subnet2Name": {
+            "value": "Subnet1"
+        },
+        "Subnet2Prefix": {
+            "value": "10.3.1.0/24"
+        },
+        "virtualNetworkAddressPrefix": {
+            "value": "10.3.0.0/16"
+        },
+        "virtualNetworkExistingRGName": {
+            "value": "MainResourceGroup"
+        },
+        "virtualNetworkName": {
+            "value": "HubVNET"
+        },
+        "vmName": {
+            "value": "Catalyst8000v0"
+        },
+        "vmSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "vnetNewOrExisting": {
+            "value": "existing"
+        }
+    }
+}
